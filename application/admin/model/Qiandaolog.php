@@ -4,14 +4,8 @@ namespace app\admin\model;
 
 use think\Model;
 
-
 class Qiandaolog extends Model
 {
-
-    
-
-    
-
     // 表名
     protected $name = 'qiandao_log';
     
@@ -27,14 +21,9 @@ class Qiandaolog extends Model
     protected $append = [
 
     ];
-    
 
-    
-
-
-
-
-
-
-
+    public function user()
+    {
+        return $this->belongsTo('User', 'user_id', 'id', [], 'LEFT');
+    }
 }

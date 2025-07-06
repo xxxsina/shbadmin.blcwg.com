@@ -27,14 +27,9 @@ class Userscorelog extends Model
     protected $append = [
 
     ];
-    
 
-    
-
-
-
-
-
-
-
+//    public function user()
+//    {
+//        return $this->belongsTo('User', 'user_id', 'id', [], 'LEFT');
+//    }
 }

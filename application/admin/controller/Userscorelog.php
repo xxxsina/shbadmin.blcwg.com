@@ -25,13 +25,13 @@ class Userscorelog extends Backend
 
     }
 
-    protected function buildQuery()
-    {
-        $query = parent::buildQuery();
-        return $query->alias('log')
-            ->join('user u', 'log.user_id = u.id', 'LEFT')
-            ->field('log.*, u.username as user_username');
-    }
+//    protected function buildQuery()
+//    {
+//        $query = parent::buildQuery();
+//        return $query->alias('log')
+//            ->join('user u', 'log.user_id = u.id', 'LEFT')
+//            ->field('log.*, u.username as user_username');
+//    }
 
     public function index($ids = null)
     {

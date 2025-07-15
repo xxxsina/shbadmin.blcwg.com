@@ -17,10 +17,12 @@ return [
     // +----------------------------------------------------------------------
     // 应用命名空间
     'app_namespace'          => 'app',
+    // 域名
+    'web_host'               => Env::get('app.web_host', 'http://shb.blcwg.com'),
     // 应用调试模式
     'app_debug'              => Env::get('app.debug', true),
     // 应用Trace
-    'app_trace'              => Env::get('app.trace', true),
+    'app_trace'              => Env::get('app.trace', false),
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -185,13 +187,40 @@ return [
     // +----------------------------------------------------------------------
     'cache'                  => [
         // 驱动方式
-        'type'   => 'File',
-        // 缓存保存目录
-        'path'   => CACHE_PATH,
+//        'type'   => 'File',
+//        // 缓存保存目录
+//        'path'   => CACHE_PATH,
         // 缓存前缀
         'prefix' => '',
         // 缓存有效期 0表示永久缓存
         'expire' => 0,
+
+        // 使用复合缓存类型
+        'type'  =>  'complex',
+        // 默认使用的缓存
+        'default'   =>  [
+            // 驱动方式
+            'type'   => 'File',
+            // 缓存保存目录
+            'path'   => CACHE_PATH,
+        ],
+        // 文件缓存
+        'file'   =>  [
+            // 驱动方式
+            'type'   => 'file',
+            // 设置不同的缓存保存目录
+            'path'   => CACHE_PATH,
+        ],
+        // redis缓存
+        'redis'   =>  [
+            // 驱动方式
+            'type'   => 'redis',
+            // 服务器地址
+            'host'   => '127.0.0.1',
+            'port'	 => '6379',
+            'select' => 2,
+            'password' => ''
+        ],
     ],
     // +----------------------------------------------------------------------
     // | 会话设置

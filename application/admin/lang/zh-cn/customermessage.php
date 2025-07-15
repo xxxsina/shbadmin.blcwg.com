@@ -2,11 +2,15 @@
 
 return [
     'User_id'    => '用户ID',
-    'Realname'   => '姓名',
-    'Phone'      => '电话',
+    'User_name'  => '用户名',
+    'Realname'   => '姓名(用户填写)',
+    'Mobile'     => '手机号',
     'Problem'    => '遇到的问题',
     'Answer'     => '回答',
-    'Confirm'    => '确认状态',
+    'Status'     => '状态',
+    'Image'      => '图片',
+    'Video'      => '视频',
+    'Attachment' => '附件',
     'Createtime' => '创建时间',
     'Updatetime' => '更新时间'
 ];

@@ -11,6 +11,7 @@ return [
     'Mobile'         => '手机号',
     'Avatar'         => '头像',
     'Level'          => '等级',
+    'VersionName'    => 'APP版本号',
     'Gender'         => '性别',
     'Male'           => '男',
     'FeMale'         => '女',

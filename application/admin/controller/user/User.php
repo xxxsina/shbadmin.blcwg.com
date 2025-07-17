@@ -27,6 +27,19 @@ class User extends Backend
         $this->model = new \app\admin\model\User;
     }
 
+    protected $avatarField = [
+        'avatar_1',
+        'avatar_2',
+        'avatar_3',
+        'avatar_4',
+        'avatar_5',
+        'avatar_6',
+        'avatar_7',
+        'avatar_8',
+    ];
+
+    protected $imageUrl = "http://shb.blcwg.com/data/avatars/";
+
     /**
      * 查看
      */
@@ -46,7 +59,13 @@ class User extends Backend
                 ->order($sort, $order)
                 ->paginate($limit);
             foreach ($list as $k => $v) {
-                $v->avatar = $v->avatar ? cdnurl($v->avatar, true) : letter_avatar($v->nickname);
+                if (in_array($v->avatar, $this->avatarField)) {
+                    $v->avatar = $this->imageUrl . $v->avatar . '.png';
+                } else if (!empty($v->avatar)) {
+                    $v->avatar = $this->imageUrl . $v->avatar;
+                } else {
+                    $v->avatar = letter_avatar($v->nickname);
+                }
                 $v->hidden(['password', 'salt']);
             }
             $result = array("total" => $list->total(), "rows" => $list->items());

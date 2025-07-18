@@ -70,10 +70,13 @@ class Customermessage extends Model
 
     public function cacheCustomerMessage($userId, $msgId, $param)
     {
+        $msg = $this->get($msgId);
         $key = $this->redisKeyModel->getCustomerMessagesKey($userId, $msgId);
         $result = self::$redis->hgetAll($key);
         if (!empty($result)) {
             if (isset($param['user_id'])) unset($param['user_id']);
+            if (!isset($param['answer_image'])) $param['answer_image'] = $msg->answer_image;
+            if (!isset($param['answer_video'])) $param['answer_video'] = $msg->answer_video;
             self::$redis->hMSet($key, $param);
         }
 

@@ -55,6 +55,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return value;
                             }
                         },
+                        {
+                            field: 'is_overcome',
+                            title: __('Is_overcome'),
+                            operate: "=",
+                            formatter: function(value, row, index) {
+                                // 截断显示最多10个字符，鼠标悬停显示完整内容
+                                if (value == 1) {
+                                    return '<span style="color:#2a46ee;font-weight: bold;">已解决</span>';
+                                } else if (value == 2) {
+                                    return '<span  style="color:red;">未解决</span>';
+                                } else {
+                                    return '<span  style="color:yellowgreen;">未评价</span>';
+                                }
+                            },
+                            searchList: {
+                                // 定义下拉选项
+                                '0': '未评价',
+                                '1': '已解决',
+                                '2': '未解决'
+                            }
+                        },
                         {field: 'image', title: __('Attachment'), operate: false, formatter: function(value, row, index) {
                                 // 截断显示最多10个字符，鼠标悬停显示完整内容
                                 var icon = '';

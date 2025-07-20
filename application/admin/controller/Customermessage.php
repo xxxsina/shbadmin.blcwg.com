@@ -39,7 +39,7 @@ class Customermessage extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) =
-                $this->buildparams('u.username', 'realname');
+                $this->buildparams(['u.username', 'realname', 'is_overcome'], true);
 
             $total = $this->model
                 ->alias('customermessage')

@@ -34,7 +34,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             searchList: {
                                 // 定义下拉选项
-                                '': '类型',
                                 'check_in': '签到',
                                 'add_score': '赚取更多'
                             }},
@@ -46,7 +45,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             searchList: {
                                 // 定义下拉选项
-                                '': '选项',
                                 '1': '是',
                                 '0': '否'
                             }},

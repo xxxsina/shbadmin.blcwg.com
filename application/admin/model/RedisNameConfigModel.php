@@ -10,4 +10,14 @@ class RedisNameConfigModel extends Model
     {
         return sprintf("shb:customer_messages:userId:%s:msgId:%s", $userId, $msgId);
     }
+
+    public function getArticleById($id)
+    {
+        return sprintf("shb:article:id:%s", $id);
+    }
+
+    public function getArticleList()
+    {
+        return sprintf("shb:articles:list");
+    }
 }

@@ -18,9 +18,9 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 域名
-    'web_host'               => Env::get('app.web_host', 'http://shb.blcwg.com'),
+    'web_host'               => Env::get('app.web_host', 'http://shbcdn.blcwg.com'),
     // 应用调试模式
-    'app_debug'              => Env::get('app.debug', true),
+    'app_debug'              => Env::get('app.debug', false),
     // 应用Trace
     'app_trace'              => Env::get('app.trace', false),
     // 应用模式状态

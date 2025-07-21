@@ -41,14 +41,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return value;
                             }},
                         {field: 'title', title: __('Title'), operate: 'LIKE'},
-                        {field: 'status', title: __('Status'), formatter: function(value, row, index) {
-                                if (value == 0) {
-                                    return '隐藏';
-                                } else if (value == 1) {
-                                    return '展示';
-                                }
-                                return value;
-                            }},
+                        {field: 'status', title: __('Status'), table: table, formatter: Table.api.formatter.toggle},
                         {field: 'cover_image', title: __('Cover_image'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

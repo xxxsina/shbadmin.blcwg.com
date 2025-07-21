@@ -27,7 +27,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'admin_id', title: __('Admin_id')},
+                        // {field: 'admin_id', title: __('Admin_id')},
                         {field: 'type', title: __('Type'), operate: 'LIKE', formatter: function(value, row, index) {
                                 if (value == 'sport') {
                                     return '运动';

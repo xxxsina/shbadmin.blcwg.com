@@ -11,7 +11,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'customermessage/index/' + location.search,
                     // add_url: 'customermessage/add',
                     edit_url: 'customermessage/edit',
-                    // del_url: 'customermessage/del',
+                    del_url: 'customermessage/del',
                     table: 'customermessage',
                 }
             });

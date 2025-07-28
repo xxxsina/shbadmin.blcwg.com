@@ -26,17 +26,35 @@ class Customermessage extends Model
     ];
 
     protected static $redis = null;
-    protected $redisKeyModel = null;
+    protected static $redisKeyModel = null;
 
-    protected static function init() {
-        self::$redis = Cache::store('redis')->handler();
-
-    }
+//    protected static function init() {
+//        self::$redis = Cache::store('redis')->handler();
+//    }
 
     public function __construct($data = [])
     {
         parent::__construct($data);
-        $this->redisKeyModel = new RedisNameConfigModel();
+//        $this->redisKeyModel = new RedisNameConfigModel();
+        self::$redisKeyModel = new RedisNameConfigModel();
+    }
+
+    protected static function init()
+    {
+        // 更新后事件
+        self::event('after_update', function ($model) {
+            $redis = Cache::store('redis')->handler();
+            // 更新后的处理
+            $redis->hMSet(self::$redisKeyModel->getCustomerMessagesKey($model->user_id, $model->id), $model->toArray());
+        });
+
+        // 删除后事件
+        self::event('after_delete', function ($model) {
+            $redis = Cache::store('redis')->handler();
+            // 删除后的处理
+            $redis->del(self::$redisKeyModel->getCustomerMessagesKey($model->user_id, $model->id));
+            $redis->zRem(self::$redisKeyModel->getCustomerMessagesListKey($model->user_id), $model->id);
+        });
     }
 
     // 在Customermessage模型中
@@ -56,30 +74,5 @@ class Customermessage extends Model
         }
 
         return Config::get("web_host") . '/data/videos/' . $value;
-    }
-
-    /**
-     * @return object|\think\cache\Driver
-     * @author LEE
-     * @Date 2025-07-15 11:49
-     */
-    private function ORedis()
-    {
-
-    }
-
-    public function cacheCustomerMessage($userId, $msgId, $param)
-    {
-        $msg = $this->get($msgId);
-        $key = $this->redisKeyModel->getCustomerMessagesKey($userId, $msgId);
-        $result = self::$redis->hgetAll($key);
-        if (!empty($result)) {
-            if (isset($param['user_id'])) unset($param['user_id']);
-            if (!isset($param['answer_image'])) $param['answer_image'] = $msg->answer_image;
-            if (!isset($param['answer_video'])) $param['answer_video'] = $msg->answer_video;
-            self::$redis->hMSet($key, $param);
-        }
-
-        return null;
     }
 }

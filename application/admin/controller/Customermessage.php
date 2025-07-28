@@ -66,46 +66,4 @@ class Customermessage extends Backend
 
         return $this->view->fetch();
     }
-
-    public function edit($ids = null)
-    {
-        $row = $this->model->get($ids);
-        if (!$row) {
-            $this->error(__('No Results were found'));
-        }
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds) && !in_array($row[$this->dataLimitField], $adminIds)) {
-            $this->error(__('You have no permission'));
-        }
-        if (false === $this->request->isPost()) {
-            $this->view->assign('row', $row);
-            return $this->view->fetch();
-        }
-        $params = $this->request->post('row/a');
-        if (empty($params)) {
-            $this->error(__('Parameter %s can not be empty', ''));
-        }
-        $params = $this->preExcludeFields($params);
-        $result = false;
-        Db::startTrans();
-        try {
-            //是否采用模型验证
-            if ($this->modelValidate) {
-                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
-                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
-                $row->validateFailException()->validate($validate);
-            }
-            $result = $row->allowField(true)->save($params);
-            // 更新缓存
-            $this->model->cacheCustomerMessage($params['user_id'], $ids, $params);
-            Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
-            Db::rollback();
-            $this->error($e->getMessage());
-        }
-        if (false === $result) {
-            $this->error(__('No rows were updated'));
-        }
-        $this->success();
-    }
 }

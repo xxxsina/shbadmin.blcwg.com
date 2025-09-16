@@ -4,6 +4,7 @@ namespace app\admin\model;
 
 use app\common\model\MoneyLog;
 use app\common\model\ScoreLog;
+use think\Cache;
 use think\Model;
 
 class User extends Model
@@ -22,6 +23,7 @@ class User extends Model
         'logintime_text',
         'jointime_text'
     ];
+    protected static $redisKeyModel = null;
 
     public function getOriginData()
     {
@@ -49,10 +51,30 @@ class User extends Model
             $changedata = $row->getChangedData();
             $origin = $row->getOriginData();
             if (isset($changedata['money']) && (function_exists('bccomp') ? bccomp($changedata['money'], $origin['money'], 2) !== 0 : (double)$changedata['money'] !== (double)$origin['money'])) {
-                MoneyLog::create(['user_id' => $row['id'], 'money' => $changedata['money'] - $origin['money'], 'before' => $origin['money'], 'after' => $changedata['money'], 'memo' => '管理员变更金额']);
+                // 暂时没用
+                MoneyLog::create([
+                    'user_id' => $row['id'],
+                    'money' => $changedata['money'] - $origin['money'],
+                    'before' => $origin['money'],
+                    'after' => $changedata['money'],
+                    'memo' => '管理员变更金额'
+                ]);
             }
             if (isset($changedata['score']) && (int)$changedata['score'] !== (int)$origin['score']) {
-                ScoreLog::create(['user_id' => $row['id'], 'score' => $changedata['score'] - $origin['score'], 'before' => $origin['score'], 'after' => $changedata['score'], 'memo' => '管理员变更积分']);
+                // 目前在用 2025-09-16 下午15点半记录
+                $time = time();
+                ScoreLog::create([
+                    'user_id' => $row['id'],
+                    'score' => $changedata['score'] - $origin['score'],
+                    'before' => $origin['score'],
+                    'after' => $changedata['score'],
+                    'memo' => '管理员变更积分',
+                    'unique_random' => "score_{$row['id']}_{$time}",
+                ]);
+                // 更新缓存
+                self::$redisKeyModel = new RedisNameConfigModel();
+                $redis = Cache::store('redis')->handler();
+                $redis->hMSet(self::$redisKeyModel->getUserKey($row['id']), $row->toArray());
             }
         });
     }

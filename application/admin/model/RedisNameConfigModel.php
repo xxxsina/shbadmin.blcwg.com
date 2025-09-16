@@ -6,6 +6,11 @@ use think\Model;
 
 class RedisNameConfigModel extends Model
 {
+    // 用户数据
+    public function getUserKey($userId)
+    {
+        return sprintf("shb:user:%s", $userId);
+    }
     // 用户问题列表
     public function getCustomerMessagesListKey($userId)
     {

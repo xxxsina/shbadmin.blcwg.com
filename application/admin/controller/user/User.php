@@ -121,4 +121,39 @@ class User extends Backend
         $this->success();
     }
 
+    public function checkin()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $username = trim($data['row']['username']);
+            $checkintime = trim($data['row']['checkintime']);
+
+            if (empty($username) || empty($checkintime)) {
+                $this->error(__('用户名或补签日期不能为空'));
+            }
+
+            $row = $this->model->where(['username' => $username])->find();
+            if (empty($row->id)) {
+                $this->error(__('用户名不存在'));
+            }
+
+            // 转义参数，防止命令注入
+            $date = escapeshellarg($checkintime);
+
+            // 启动后台脚本
+            $command = "php74 /www/wwwroot/shb.blcwg.com/scripts/checkin.form.admin.php {$username} {$date} >> /www/wwwroot/shb.blcwg.com/scripts/xcheckin.log 2>&1 &";
+            $output = '';
+            $return_var = 0;
+
+            exec($command, $output, $return_var);
+
+            if($return_var === 0) {
+                $this->success(__('执行完成'));
+            } else {
+                $this->error(__('执行失败'));
+            }
+        }
+
+        return $this->view->fetch();
+    }
 }

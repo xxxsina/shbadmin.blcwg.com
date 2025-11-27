@@ -4,6 +4,7 @@ return [
     'Id'             => 'ID',
     'Group_id'       => '组别ID',
     'Username'       => '用户名',
+    'Username_mobile'=> '用户名(即手机号)',
     'Nickname'       => '昵称',
     'Password'       => '密码',
     'Salt'           => '密码盐',
@@ -30,5 +31,7 @@ return [
     'Updatetime'     => '更新时间',
     'Token'          => 'Token',
     'Status'         => '状态',
+    'CheckIn'        => '补签',
+    'CheckInTime'    => '补签时间',
     'Leave password blank if dont want to change' => '不修改密码请留空',
 ];

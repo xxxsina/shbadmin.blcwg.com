@@ -10,6 +10,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'user/user/edit',
                     del_url: 'user/user/del',
                     multi_url: 'user/user/multi',
+                    checkin_url: 'user/user/checkin',
                     table: 'user',
                 }
             });
@@ -50,11 +51,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+
+            // 补签
+            $(document).on("click", ".btn-checkin", function () {
+                Backend.api.open($.fn.bootstrapTable.defaults.extend.checkin_url,__('CheckIn'));
+            });
         },
         add: function () {
             Controller.api.bindevent();
         },
         edit: function () {
+            Controller.api.bindevent();
+        },
+        checkin: function () {
             Controller.api.bindevent();
         },
         api: {

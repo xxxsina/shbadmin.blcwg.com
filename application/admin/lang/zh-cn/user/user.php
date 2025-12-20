@@ -33,5 +33,6 @@ return [
     'Status'         => '状态',
     'CheckIn'        => '补签',
     'CheckInTime'    => '补签时间',
+    'CheckInDaterange'    => '补签时间(时间范围)',
     'Leave password blank if dont want to change' => '不修改密码请留空',
 ];

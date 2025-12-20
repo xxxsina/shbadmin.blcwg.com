@@ -4,6 +4,7 @@ namespace app\admin\controller\user;
 
 use app\common\controller\Backend;
 use app\common\library\Auth;
+use think\Validate;
 
 /**
  * 会员管理
@@ -126,10 +127,10 @@ class User extends Backend
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $username = trim($data['row']['username']);
-            $checkintime = trim($data['row']['checkintime']);
+            $daterange = trim($data['row']['daterange']);
 
-            if (empty($username) || empty($checkintime)) {
-                $this->error(__('用户名或补签日期不能为空'));
+            if (empty($username)) {
+                $this->error(__('用户名不能为空'));
             }
 
             $row = $this->model->where(['username' => $username])->find();
@@ -137,23 +138,103 @@ class User extends Backend
                 $this->error(__('用户名不存在'));
             }
 
-            // 转义参数，防止命令注入
-            $date = escapeshellarg($checkintime);
-
-            // 启动后台脚本
-            $command = "php74 /www/wwwroot/shb.blcwg.com/scripts/checkin.form.admin.php {$username} {$date} >> /www/wwwroot/shb.blcwg.com/scripts/xcheckin.log 2>&1 &";
-            $output = '';
-            $return_var = 0;
-
-            exec($command, $output, $return_var);
-
-            if($return_var === 0) {
-                $this->success(__('执行完成'));
-            } else {
-                $this->error(__('执行失败'));
+            $dataArr = explode(' - ', $daterange);
+            if (!is_array($dataArr)) {
+                $this->error(__('请正常选择日期区间'));
             }
+
+            $validate = Validate::make([
+                'date' => [
+                    'require',
+                    'dateFormat' => 'Y-m-d',
+                ]
+            ], [
+                'date.require' => '请填写日期',
+                'date.dateFormat' => '日期格式不正确，应为 2025-12-03 格式',
+            ]);
+            foreach ($dataArr as $dateStr) {
+                $result = $validate->check([
+                    'date' => $dateStr
+                ]);
+                if ($result === false) {
+                    return $this->error($validate->getError());
+                }
+            }
+            $data = $this->generateDateRange($dataArr[0], $dataArr[1]);
+
+            foreach ($data as $date) {
+                // 启动后台脚本
+                $command = "php74 /www/wwwroot/shb.blcwg.com/scripts/checkin.form.admin.php {$username} {$date} >> /www/wwwroot/shb.blcwg.com/scripts/xcheckin.log 2>&1 &";
+                $output = '';
+                $return_var = 0;
+
+                exec($command, $output, $return_var);
+                if($return_var === 0) {
+                    continue;
+                } else {
+                    $this->error(__('执行失败'));
+                }
+            }
+            $this->success(__('成功发给系统执行'));
         }
 
         return $this->view->fetch();
+    }
+
+    /**
+     * 生成日期区间内的所有日期
+     * @param string $startDate 开始日期 Y-m-d
+     * @param string $endDate 结束日期 Y-m-d
+     * @return array 日期数组
+     */
+    public function generateDateRange($startDate, $endDate)
+    {
+        $dates = [];
+        $current = strtotime($startDate);
+        $end = strtotime($endDate);
+
+        while ($current <= $end) {
+            $dates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
+
+        return $dates;
+    }
+
+    // 老方法-废弃
+    public function checkinNO()
+    {
+//        if ($this->request->isPost()) {
+//            $data = $this->request->post();
+//            $username = trim($data['row']['username']);
+//            $checkintime = trim($data['row']['checkintime']);
+//
+//            if (empty($username) || empty($checkintime)) {
+//                $this->error(__('用户名或补签日期不能为空'));
+//            }
+//
+//            $row = $this->model->where(['username' => $username])->find();
+//            if (empty($row->id)) {
+//                $this->error(__('用户名不存在'));
+//            }
+//
+//            // 转义参数，防止命令注入
+//            $date = escapeshellarg($checkintime);
+//
+//            // 启动后台脚本
+//            $command = "php74 /www/wwwroot/shb.blcwg.com/scripts/checkin.form.admin.php {$username} {$date} >> /www/wwwroot/shb.blcwg.com/scripts/xcheckin.log 2>&1 &";
+//            $output = '';
+//            $return_var = 0;
+//
+//            exec($command, $output, $return_var);
+//
+//            if($return_var === 0) {
+//                $this->success(__('执行完成'));
+//            } else {
+//                $this->error(__('执行失败'));
+//            }
+//        }
+//
+//        return $this->view->fetch();
     }
 }

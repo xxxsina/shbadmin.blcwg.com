@@ -2,6 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
+            Fast.config.openArea = ['55%', '55%'];
             // 初始化表格参数配置
             Table.api.init({
                 extend: {

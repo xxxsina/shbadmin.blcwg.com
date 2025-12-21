@@ -65,11 +65,15 @@ class User extends Model
                 $time = time();
                 ScoreLog::create([
                     'user_id' => $row['id'],
+                    'type' => 'change_score',
                     'score' => $changedata['score'] - $origin['score'],
                     'before' => $origin['score'],
                     'after' => $changedata['score'],
-                    'memo' => '管理员变更积分',
-                    'unique_random' => "score_{$row['id']}_{$time}",
+                    'year' => date('Y'),
+                    'month' => date('n'),
+                    'day' => date('j'),
+                    'unique_random' => "change_score_{$row['id']}_{$time}",
+                    'memo' => '管理员变更积分'
                 ]);
                 // 更新缓存
                 self::$redisKeyModel = new RedisNameConfigModel();

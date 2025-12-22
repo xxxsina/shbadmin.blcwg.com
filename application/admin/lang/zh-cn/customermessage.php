@@ -7,6 +7,7 @@ return [
     'Mobile'     => '手机号',
     'Problem'    => '遇到的问题',
     'Answer'     => '回复',
+    'Auto_answer'=> '模版回复',
     'Status'     => '状态',
     'Image'      => '图片',
     'Video'      => '视频',

@@ -58,6 +58,22 @@
 <!--        </div>-->
 <!--    </div>-->
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Auto_answer')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <select
+                    id="c-auto_answer"
+                    onchange="document.getElementById('c-answer').value = this.value || ''"
+                    class="form-control selectpicker">
+                <option value="">请选择</option>
+                {foreach $autoAnswerList as $item}
+                <option value="{$item}">
+                    {$item}
+                </option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Answer')}:</label>
         <div class="col-xs-12 col-sm-8">
             <textarea id="c-answer" data-rule="required" class="form-control" name="row[answer]" rows="3">{$row.answer|htmlentities}</textarea>
